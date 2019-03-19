@@ -1,0 +1,767 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="HowToDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Info">
+          <Key>
+            <PropertyRef Name="InfoID" />
+          </Key>
+          <Property Name="InfoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NodeID" Type="int" Nullable="false" />
+          <Property Name="TreeID" Type="smallint" Nullable="false" />
+          <Property Name="TypeID" Type="smallint" Nullable="false" />
+          <Property Name="Heading" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="InfoText" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Keys">
+          <Key>
+            <PropertyRef Name="KeyID" />
+          </Key>
+          <Property Name="KeyID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TreeID" Type="smallint" Nullable="false" />
+          <Property Name="NodeID" Type="int" Nullable="false" />
+          <Property Name="TypeID" Type="smallint" Nullable="false" />
+          <Property Name="KeyText" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Nodes">
+          <Key>
+            <PropertyRef Name="NodeID" />
+          </Key>
+          <Property Name="NodeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TreeID" Type="smallint" Nullable="false" />
+          <Property Name="TypeID" Type="smallint" Nullable="false" />
+          <Property Name="ParentNodeID" Type="int" Nullable="false" />
+          <Property Name="TreeLevel" Type="smallint" Nullable="false" />
+          <Property Name="Heading" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NodeText" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'HowToDB.dbo.Notes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Notes">
+          <Key>
+            <PropertyRef Name="NoteID" />
+            <PropertyRef Name="NodeID" />
+            <PropertyRef Name="Details" />
+            <PropertyRef Name="Text" />
+          </Key>
+          <Property Name="NoteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NodeID" Type="int" Nullable="false" />
+          <Property Name="Details" Type="varchar(max)" Nullable="false" />
+          <Property Name="Text" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Pictures">
+          <Key>
+            <PropertyRef Name="PictureID" />
+          </Key>
+          <Property Name="PictureID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NodeID" Type="int" Nullable="false" />
+          <Property Name="TypeID" Type="smallint" Nullable="false" />
+          <Property Name="Picture" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PictureSize" Type="int" Nullable="false" />
+          <Property Name="DisplayAt" Type="smallint" Nullable="false" />
+          <Property Name="DisplayStopAt" Type="smallint" Nullable="false" />
+          <Property Name="InfoID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Summaries">
+          <Key>
+            <PropertyRef Name="SummaryID" />
+          </Key>
+          <Property Name="SummaryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NodeID" Type="int" Nullable="false" />
+          <Property Name="Summary" Type="text" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Trees">
+          <Key>
+            <PropertyRef Name="TreeID" />
+          </Key>
+          <Property Name="TreeID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Heading" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TypeID" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Types">
+          <Key>
+            <PropertyRef Name="TypeID" />
+          </Key>
+          <Property Name="TypeID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Label" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Category" Type="varchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <Association Name="Info_Node_fk">
+          <End Role="Nodes" Type="Self.Nodes" Multiplicity="1" />
+          <End Role="Info" Type="Self.Info" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="NodeID" />
+            </Principal>
+            <Dependent Role="Info">
+              <PropertyRef Name="NodeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Info_Tree_fk">
+          <End Role="Trees" Type="Self.Trees" Multiplicity="1" />
+          <End Role="Info" Type="Self.Info" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Trees">
+              <PropertyRef Name="TreeID" />
+            </Principal>
+            <Dependent Role="Info">
+              <PropertyRef Name="TreeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Info_Type_fk">
+          <End Role="Types" Type="Self.Types" Multiplicity="1" />
+          <End Role="Info" Type="Self.Info" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Types">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Info">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Key_Node_fk">
+          <End Role="Nodes" Type="Self.Nodes" Multiplicity="1" />
+          <End Role="Keys" Type="Self.Keys" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="NodeID" />
+            </Principal>
+            <Dependent Role="Keys">
+              <PropertyRef Name="NodeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Key_Tree_fk">
+          <End Role="Trees" Type="Self.Trees" Multiplicity="1" />
+          <End Role="Keys" Type="Self.Keys" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Trees">
+              <PropertyRef Name="TreeID" />
+            </Principal>
+            <Dependent Role="Keys">
+              <PropertyRef Name="TreeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Key_Type_fk">
+          <End Role="Types" Type="Self.Types" Multiplicity="1" />
+          <End Role="Keys" Type="Self.Keys" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Types">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Keys">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Node_Tree_fk">
+          <End Role="Trees" Type="Self.Trees" Multiplicity="1" />
+          <End Role="Nodes" Type="Self.Nodes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Trees">
+              <PropertyRef Name="TreeID" />
+            </Principal>
+            <Dependent Role="Nodes">
+              <PropertyRef Name="TreeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Node_Type_fk">
+          <End Role="Types" Type="Self.Types" Multiplicity="1" />
+          <End Role="Nodes" Type="Self.Nodes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Types">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Nodes">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Note_Node_fk">
+          <End Role="Nodes" Type="Self.Nodes" Multiplicity="1" />
+          <End Role="Notes" Type="Self.Notes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="NodeID" />
+            </Principal>
+            <Dependent Role="Notes">
+              <PropertyRef Name="NodeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Picture_Node_fk">
+          <End Role="Nodes" Type="Self.Nodes" Multiplicity="1" />
+          <End Role="Pictures" Type="Self.Pictures" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="NodeID" />
+            </Principal>
+            <Dependent Role="Pictures">
+              <PropertyRef Name="NodeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Picture_Type_fk">
+          <End Role="Types" Type="Self.Types" Multiplicity="1" />
+          <End Role="Pictures" Type="Self.Pictures" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Types">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Pictures">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Summary_Node_fk">
+          <End Role="Nodes" Type="Self.Nodes" Multiplicity="1" />
+          <End Role="Summaries" Type="Self.Summaries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="NodeID" />
+            </Principal>
+            <Dependent Role="Summaries">
+              <PropertyRef Name="NodeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Tree_Type_fk">
+          <End Role="Types" Type="Self.Types" Multiplicity="1" />
+          <End Role="Trees" Type="Self.Trees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Types">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Trees">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HowToDBModelStoreContainer">
+          <EntitySet Name="Info" EntityType="Self.Info" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Keys" EntityType="Self.Keys" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Nodes" EntityType="Self.Nodes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pictures" EntityType="Self.Pictures" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Summaries" EntityType="Self.Summaries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Trees" EntityType="Self.Trees" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Types" EntityType="Self.Types" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notes" EntityType="Self.Notes" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Notes].[NoteID] AS [NoteID], 
+    [Notes].[NodeID] AS [NodeID], 
+    [Notes].[Details] AS [Details], 
+    [Notes].[Text] AS [Text]
+    FROM [dbo].[Notes] AS [Notes]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="Info_Node_fk" Association="Self.Info_Node_fk">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Info" EntitySet="Info" />
+          </AssociationSet>
+          <AssociationSet Name="Info_Tree_fk" Association="Self.Info_Tree_fk">
+            <End Role="Trees" EntitySet="Trees" />
+            <End Role="Info" EntitySet="Info" />
+          </AssociationSet>
+          <AssociationSet Name="Info_Type_fk" Association="Self.Info_Type_fk">
+            <End Role="Types" EntitySet="Types" />
+            <End Role="Info" EntitySet="Info" />
+          </AssociationSet>
+          <AssociationSet Name="Key_Node_fk" Association="Self.Key_Node_fk">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Keys" EntitySet="Keys" />
+          </AssociationSet>
+          <AssociationSet Name="Key_Tree_fk" Association="Self.Key_Tree_fk">
+            <End Role="Trees" EntitySet="Trees" />
+            <End Role="Keys" EntitySet="Keys" />
+          </AssociationSet>
+          <AssociationSet Name="Key_Type_fk" Association="Self.Key_Type_fk">
+            <End Role="Types" EntitySet="Types" />
+            <End Role="Keys" EntitySet="Keys" />
+          </AssociationSet>
+          <AssociationSet Name="Node_Tree_fk" Association="Self.Node_Tree_fk">
+            <End Role="Trees" EntitySet="Trees" />
+            <End Role="Nodes" EntitySet="Nodes" />
+          </AssociationSet>
+          <AssociationSet Name="Node_Type_fk" Association="Self.Node_Type_fk">
+            <End Role="Types" EntitySet="Types" />
+            <End Role="Nodes" EntitySet="Nodes" />
+          </AssociationSet>
+          <AssociationSet Name="Note_Node_fk" Association="Self.Note_Node_fk">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Notes" EntitySet="Notes" />
+          </AssociationSet>
+          <AssociationSet Name="Picture_Node_fk" Association="Self.Picture_Node_fk">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Pictures" EntitySet="Pictures" />
+          </AssociationSet>
+          <AssociationSet Name="Picture_Type_fk" Association="Self.Picture_Type_fk">
+            <End Role="Types" EntitySet="Types" />
+            <End Role="Pictures" EntitySet="Pictures" />
+          </AssociationSet>
+          <AssociationSet Name="Summary_Node_fk" Association="Self.Summary_Node_fk">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Summaries" EntitySet="Summaries" />
+          </AssociationSet>
+          <AssociationSet Name="Tree_Type_fk" Association="Self.Tree_Type_fk">
+            <End Role="Types" EntitySet="Types" />
+            <End Role="Trees" EntitySet="Trees" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HowToDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Info">
+          <Key>
+            <PropertyRef Name="InfoID" />
+          </Key>
+          <Property Name="InfoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NodeID" Type="Int32" Nullable="false" />
+          <Property Name="TreeID" Type="Int16" Nullable="false" />
+          <Property Name="TypeID" Type="Int16" Nullable="false" />
+          <Property Name="Heading" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="InfoText" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Node" Relationship="Self.Info_Node_fk" FromRole="Info" ToRole="Nodes" />
+          <NavigationProperty Name="Tree" Relationship="Self.Info_Tree_fk" FromRole="Info" ToRole="Trees" />
+          <NavigationProperty Name="Type" Relationship="Self.Info_Type_fk" FromRole="Info" ToRole="Types" />
+        </EntityType>
+        <EntityType Name="Key">
+          <Key>
+            <PropertyRef Name="KeyID" />
+          </Key>
+          <Property Name="KeyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TreeID" Type="Int16" Nullable="false" />
+          <Property Name="NodeID" Type="Int32" Nullable="false" />
+          <Property Name="TypeID" Type="Int16" Nullable="false" />
+          <Property Name="KeyText" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Node" Relationship="Self.Key_Node_fk" FromRole="Keys" ToRole="Nodes" />
+          <NavigationProperty Name="Tree" Relationship="Self.Key_Tree_fk" FromRole="Keys" ToRole="Trees" />
+          <NavigationProperty Name="Type" Relationship="Self.Key_Type_fk" FromRole="Keys" ToRole="Types" />
+        </EntityType>
+        <EntityType Name="Node">
+          <Key>
+            <PropertyRef Name="NodeID" />
+          </Key>
+          <Property Name="NodeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TreeID" Type="Int16" Nullable="false" />
+          <Property Name="TypeID" Type="Int16" Nullable="false" />
+          <Property Name="ParentNodeID" Type="Int32" Nullable="false" />
+          <Property Name="TreeLevel" Type="Int16" Nullable="false" />
+          <Property Name="Heading" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NodeText" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Infoes" Relationship="Self.Info_Node_fk" FromRole="Nodes" ToRole="Info" />
+          <NavigationProperty Name="Keys" Relationship="Self.Key_Node_fk" FromRole="Nodes" ToRole="Keys" />
+          <NavigationProperty Name="Tree" Relationship="Self.Node_Tree_fk" FromRole="Nodes" ToRole="Trees" />
+          <NavigationProperty Name="Type" Relationship="Self.Node_Type_fk" FromRole="Nodes" ToRole="Types" />
+          <NavigationProperty Name="Notes" Relationship="Self.Note_Node_fk" FromRole="Nodes" ToRole="Notes" />
+          <NavigationProperty Name="Pictures" Relationship="Self.Picture_Node_fk" FromRole="Nodes" ToRole="Pictures" />
+          <NavigationProperty Name="Summaries" Relationship="Self.Summary_Node_fk" FromRole="Nodes" ToRole="Summaries" />
+        </EntityType>
+        <EntityType Name="Picture">
+          <Key>
+            <PropertyRef Name="PictureID" />
+          </Key>
+          <Property Name="PictureID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NodeID" Type="Int32" Nullable="false" />
+          <Property Name="TypeID" Type="Int16" Nullable="false" />
+          <Property Name="Picture1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PictureSize" Type="Int32" Nullable="false" />
+          <Property Name="DisplayAt" Type="Int16" Nullable="false" />
+          <Property Name="DisplayStopAt" Type="Int16" Nullable="false" />
+          <Property Name="InfoID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Node" Relationship="Self.Picture_Node_fk" FromRole="Pictures" ToRole="Nodes" />
+          <NavigationProperty Name="Type" Relationship="Self.Picture_Type_fk" FromRole="Pictures" ToRole="Types" />
+        </EntityType>
+        <EntityType Name="Summary">
+          <Key>
+            <PropertyRef Name="SummaryID" />
+          </Key>
+          <Property Name="SummaryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NodeID" Type="Int32" Nullable="false" />
+          <Property Name="Summary1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Node" Relationship="Self.Summary_Node_fk" FromRole="Summaries" ToRole="Nodes" />
+        </EntityType>
+        <EntityType Name="Tree">
+          <Key>
+            <PropertyRef Name="TreeID" />
+          </Key>
+          <Property Name="TreeID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Heading" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TypeID" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Infoes" Relationship="Self.Info_Tree_fk" FromRole="Trees" ToRole="Info" />
+          <NavigationProperty Name="Keys" Relationship="Self.Key_Tree_fk" FromRole="Trees" ToRole="Keys" />
+          <NavigationProperty Name="Nodes" Relationship="Self.Node_Tree_fk" FromRole="Trees" ToRole="Nodes" />
+          <NavigationProperty Name="Type" Relationship="Self.Tree_Type_fk" FromRole="Trees" ToRole="Types" />
+        </EntityType>
+        <EntityType Name="Typ">
+          <Key>
+            <PropertyRef Name="TypeID" />
+          </Key>
+          <Property Name="TypeID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Label" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Category" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Infoes" Relationship="Self.Info_Type_fk" FromRole="Types" ToRole="Info" />
+          <NavigationProperty Name="Keys" Relationship="Self.Key_Type_fk" FromRole="Types" ToRole="Keys" />
+          <NavigationProperty Name="Nodes" Relationship="Self.Node_Type_fk" FromRole="Types" ToRole="Nodes" />
+          <NavigationProperty Name="Pictures" Relationship="Self.Picture_Type_fk" FromRole="Types" ToRole="Pictures" />
+          <NavigationProperty Name="Trees" Relationship="Self.Tree_Type_fk" FromRole="Types" ToRole="Trees" />
+        </EntityType>
+        <EntityType Name="Note">
+          <Key>
+            <PropertyRef Name="NoteID" />
+            <PropertyRef Name="NodeID" />
+            <PropertyRef Name="Details" />
+            <PropertyRef Name="Text" />
+          </Key>
+          <Property Name="NoteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NodeID" Type="Int32" Nullable="false" />
+          <Property Name="Details" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Node" Relationship="Self.Note_Node_fk" FromRole="Notes" ToRole="Nodes" />
+        </EntityType>
+        <Association Name="Info_Node_fk">
+          <End Role="Nodes" Type="Self.Node" Multiplicity="1" />
+          <End Role="Info" Type="Self.Info" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="NodeID" />
+            </Principal>
+            <Dependent Role="Info">
+              <PropertyRef Name="NodeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Info_Tree_fk">
+          <End Role="Trees" Type="Self.Tree" Multiplicity="1" />
+          <End Role="Info" Type="Self.Info" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Trees">
+              <PropertyRef Name="TreeID" />
+            </Principal>
+            <Dependent Role="Info">
+              <PropertyRef Name="TreeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Info_Type_fk">
+          <End Role="Types" Type="HowToDBModel.Typ" Multiplicity="1" />
+          <End Role="Info" Type="Self.Info" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Types">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Info">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Key_Node_fk">
+          <End Role="Nodes" Type="Self.Node" Multiplicity="1" />
+          <End Role="Keys" Type="Self.Key" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="NodeID" />
+            </Principal>
+            <Dependent Role="Keys">
+              <PropertyRef Name="NodeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Key_Tree_fk">
+          <End Role="Trees" Type="Self.Tree" Multiplicity="1" />
+          <End Role="Keys" Type="Self.Key" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Trees">
+              <PropertyRef Name="TreeID" />
+            </Principal>
+            <Dependent Role="Keys">
+              <PropertyRef Name="TreeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Key_Type_fk">
+          <End Role="Types" Type="HowToDBModel.Typ" Multiplicity="1" />
+          <End Role="Keys" Type="Self.Key" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Types">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Keys">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Node_Tree_fk">
+          <End Role="Trees" Type="Self.Tree" Multiplicity="1" />
+          <End Role="Nodes" Type="Self.Node" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Trees">
+              <PropertyRef Name="TreeID" />
+            </Principal>
+            <Dependent Role="Nodes">
+              <PropertyRef Name="TreeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Node_Type_fk">
+          <End Role="Types" Type="HowToDBModel.Typ" Multiplicity="1" />
+          <End Role="Nodes" Type="Self.Node" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Types">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Nodes">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Note_Node_fk">
+          <End Role="Nodes" Type="Self.Node" Multiplicity="1" />
+          <End Role="Notes" Type="Self.Note" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="NodeID" />
+            </Principal>
+            <Dependent Role="Notes">
+              <PropertyRef Name="NodeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Picture_Node_fk">
+          <End Role="Nodes" Type="Self.Node" Multiplicity="1" />
+          <End Role="Pictures" Type="Self.Picture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="NodeID" />
+            </Principal>
+            <Dependent Role="Pictures">
+              <PropertyRef Name="NodeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Summary_Node_fk">
+          <End Role="Nodes" Type="Self.Node" Multiplicity="1" />
+          <End Role="Summaries" Type="Self.Summary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Nodes">
+              <PropertyRef Name="NodeID" />
+            </Principal>
+            <Dependent Role="Summaries">
+              <PropertyRef Name="NodeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Picture_Type_fk">
+          <End Role="Types" Type="HowToDBModel.Typ" Multiplicity="1" />
+          <End Role="Pictures" Type="Self.Picture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Types">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Pictures">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Tree_Type_fk">
+          <End Role="Types" Type="HowToDBModel.Typ" Multiplicity="1" />
+          <End Role="Trees" Type="Self.Tree" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Types">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Trees">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HowToDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Infoes" EntityType="Self.Info" />
+          <EntitySet Name="Keys" EntityType="Self.Key" />
+          <EntitySet Name="Nodes" EntityType="Self.Node" />
+          <EntitySet Name="Pictures" EntityType="Self.Picture" />
+          <EntitySet Name="Summaries" EntityType="Self.Summary" />
+          <EntitySet Name="Trees" EntityType="Self.Tree" />
+          <EntitySet Name="Typs" EntityType="HowToDBModel.Typ" />
+          <EntitySet Name="Notes" EntityType="Self.Note" />
+          <AssociationSet Name="Info_Node_fk" Association="Self.Info_Node_fk">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Info" EntitySet="Infoes" />
+          </AssociationSet>
+          <AssociationSet Name="Info_Tree_fk" Association="Self.Info_Tree_fk">
+            <End Role="Trees" EntitySet="Trees" />
+            <End Role="Info" EntitySet="Infoes" />
+          </AssociationSet>
+          <AssociationSet Name="Info_Type_fk" Association="Self.Info_Type_fk">
+            <End Role="Types" EntitySet="Typs" />
+            <End Role="Info" EntitySet="Infoes" />
+          </AssociationSet>
+          <AssociationSet Name="Key_Node_fk" Association="Self.Key_Node_fk">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Keys" EntitySet="Keys" />
+          </AssociationSet>
+          <AssociationSet Name="Key_Tree_fk" Association="Self.Key_Tree_fk">
+            <End Role="Trees" EntitySet="Trees" />
+            <End Role="Keys" EntitySet="Keys" />
+          </AssociationSet>
+          <AssociationSet Name="Key_Type_fk" Association="Self.Key_Type_fk">
+            <End Role="Types" EntitySet="Typs" />
+            <End Role="Keys" EntitySet="Keys" />
+          </AssociationSet>
+          <AssociationSet Name="Node_Tree_fk" Association="Self.Node_Tree_fk">
+            <End Role="Trees" EntitySet="Trees" />
+            <End Role="Nodes" EntitySet="Nodes" />
+          </AssociationSet>
+          <AssociationSet Name="Node_Type_fk" Association="Self.Node_Type_fk">
+            <End Role="Types" EntitySet="Typs" />
+            <End Role="Nodes" EntitySet="Nodes" />
+          </AssociationSet>
+          <AssociationSet Name="Note_Node_fk" Association="Self.Note_Node_fk">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Notes" EntitySet="Notes" />
+          </AssociationSet>
+          <AssociationSet Name="Picture_Node_fk" Association="Self.Picture_Node_fk">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Pictures" EntitySet="Pictures" />
+          </AssociationSet>
+          <AssociationSet Name="Summary_Node_fk" Association="Self.Summary_Node_fk">
+            <End Role="Nodes" EntitySet="Nodes" />
+            <End Role="Summaries" EntitySet="Summaries" />
+          </AssociationSet>
+          <AssociationSet Name="Picture_Type_fk" Association="Self.Picture_Type_fk">
+            <End Role="Types" EntitySet="Typs" />
+            <End Role="Pictures" EntitySet="Pictures" />
+          </AssociationSet>
+          <AssociationSet Name="Tree_Type_fk" Association="Self.Tree_Type_fk">
+            <End Role="Types" EntitySet="Typs" />
+            <End Role="Trees" EntitySet="Trees" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HowToDBModelStoreContainer" CdmEntityContainer="HowToDBEntities">
+          <EntitySetMapping Name="Infoes">
+            <EntityTypeMapping TypeName="HowToDBModel.Info">
+              <MappingFragment StoreEntitySet="Info">
+                <ScalarProperty Name="InfoID" ColumnName="InfoID" />
+                <ScalarProperty Name="NodeID" ColumnName="NodeID" />
+                <ScalarProperty Name="TreeID" ColumnName="TreeID" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="Heading" ColumnName="Heading" />
+                <ScalarProperty Name="InfoText" ColumnName="InfoText" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Keys">
+            <EntityTypeMapping TypeName="HowToDBModel.Key">
+              <MappingFragment StoreEntitySet="Keys">
+                <ScalarProperty Name="KeyID" ColumnName="KeyID" />
+                <ScalarProperty Name="TreeID" ColumnName="TreeID" />
+                <ScalarProperty Name="NodeID" ColumnName="NodeID" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="KeyText" ColumnName="KeyText" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Nodes">
+            <EntityTypeMapping TypeName="HowToDBModel.Node">
+              <MappingFragment StoreEntitySet="Nodes">
+                <ScalarProperty Name="NodeID" ColumnName="NodeID" />
+                <ScalarProperty Name="TreeID" ColumnName="TreeID" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="ParentNodeID" ColumnName="ParentNodeID" />
+                <ScalarProperty Name="TreeLevel" ColumnName="TreeLevel" />
+                <ScalarProperty Name="Heading" ColumnName="Heading" />
+                <ScalarProperty Name="NodeText" ColumnName="NodeText" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pictures">
+            <EntityTypeMapping TypeName="HowToDBModel.Picture">
+              <MappingFragment StoreEntitySet="Pictures">
+                <ScalarProperty Name="PictureID" ColumnName="PictureID" />
+                <ScalarProperty Name="NodeID" ColumnName="NodeID" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="Picture1" ColumnName="Picture" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="PictureSize" ColumnName="PictureSize" />
+                <ScalarProperty Name="DisplayAt" ColumnName="DisplayAt" />
+                <ScalarProperty Name="DisplayStopAt" ColumnName="DisplayStopAt" />
+                <ScalarProperty Name="InfoID" ColumnName="InfoID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Summaries">
+            <EntityTypeMapping TypeName="HowToDBModel.Summary">
+              <MappingFragment StoreEntitySet="Summaries">
+                <ScalarProperty Name="SummaryID" ColumnName="SummaryID" />
+                <ScalarProperty Name="NodeID" ColumnName="NodeID" />
+                <ScalarProperty Name="Summary1" ColumnName="Summary" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Trees">
+            <EntityTypeMapping TypeName="HowToDBModel.Tree">
+              <MappingFragment StoreEntitySet="Trees">
+                <ScalarProperty Name="TreeID" ColumnName="TreeID" />
+                <ScalarProperty Name="Heading" ColumnName="Heading" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Typs">
+            <EntityTypeMapping TypeName="HowToDBModel.Typ">
+              <MappingFragment StoreEntitySet="Types">
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="Label" ColumnName="Label" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notes">
+            <EntityTypeMapping TypeName="HowToDBModel.Note">
+              <MappingFragment StoreEntitySet="Notes">
+                <ScalarProperty Name="NoteID" ColumnName="NoteID" />
+                <ScalarProperty Name="NodeID" ColumnName="NodeID" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
